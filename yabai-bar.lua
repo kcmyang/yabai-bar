@@ -21,11 +21,11 @@ function YabaiBar:new(exec)
     },
     hasWindowsStyle = {
       font = hs.styledtext.defaultFonts.menuBar,
-      color = {hex = "#999"}
+      color = {hex = "#ddd"}
     },
     noWindowsStyle = {
       font = hs.styledtext.defaultFonts.menuBar,
-      color = {hex = "#222"}
+      color = {hex = "#666"}
     },
     separator = hs.styledtext.new(
       "  ", {font = hs.styledtext.defaultFonts.menuBar}
