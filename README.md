@@ -9,7 +9,7 @@ A simple menu bar spaces indicator for the yabai window manager, written for Ham
 Compatibility:
 - yabai
   - Tested on v4.0.0^.
-  - Untested on v5.0.0^.
+  - Tested on v5.0.0^.
 - macOS
   - Tested on Monterery (macOS 12).
 
@@ -30,14 +30,17 @@ Installation:
   cp yabai-bar/yabai-bar.lua ~/.hammerspoon/
   ```
 - Configure your `init.lua` to create a new YabaiBar.
-  You must pass the absolute path to your `yabai` executable (probably `/usr/local/bin/yabai`) to
-  the `:new()` constructor, then update the object.
+  After creation, you may choose to update the bar manually on HammerSpoon startup.
 
   ```lua
   -- init.lua
   YabaiBar = require("yabai-bar"):new("/your/yabai/executable")
   YabaiBar:update()
   ```
+
+  - Constructor signature: `YabaiBar:new(exec, showEmptySpaces)`:
+    - `exec` - the **absolute** path to your `yabai` executable (probably `/usr/local/bin/yabai`)
+    - `showEmptySpaces` - whether to show empty, non-visible spaces on the bar (defaults to true if not provided).
 - Configure your `yabairc` or `.yabairc` file to update the YabaiBar object appropriately.
   Because of how yabai's signals work, you will need multiple signals to catch all possible events.
 

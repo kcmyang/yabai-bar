@@ -13,12 +13,14 @@ local YabaiBar = {}
 -- Constructor.
 -- Params:
 --   exec - the absolute path of the yabai executable to use
-function YabaiBar:new(exec)
+--   showEmptySpaces - whether to display indicators for empty, non-visible spaces (default: true)
+function YabaiBar:new(exec, showEmptySpaces)
     local yabaiBar = {
         bar = hs.menubar.new(),
         exec = exec,
         spaces = {},
-        showAll = true,
+        -- https://www.reddit.com/r/lua/comments/b2fekt/function_with_optional_boolean_parameter/eisq0y3/
+        showEmptySpaces = showEmptySpaces ~= false,
         focusedStyle = {
             font = hs.styledtext.defaultFonts.menuBar,
             color = hs.drawing.color.hammerspoon.osx_green
@@ -55,28 +57,30 @@ function YabaiBar:update()
         if #spaces == 0 then return end
 
         -- List of space numbers as hs.styledtext items
-        local nums = {}
+        local styledNums = {}
 
         for i = 1, #spaces do
             if spaces[i]["has-focus"] then
                 -- Focused
-                nums[i] = hs.styledtext.new(i, self.focusedStyle)
+                table.insert(styledNums, hs.styledtext.new(i, self.focusedStyle))
             elseif spaces[i]["is-visible"] then
                 -- Not focused, but visible
-                nums[i] = hs.styledtext.new(i, self.visibleStyle)
+                table.insert(styledNums, hs.styledtext.new(i, self.visibleStyle))
             elseif spaces[i]["first-window"] ~= 0 then
                 -- Not visible, but with windows showing
-                nums[i] = hs.styledtext.new(i, self.hasWindowsStyle)
-            else
+                table.insert(styledNums, hs.styledtext.new(i, self.hasWindowsStyle))
+            elseif self.showEmptySpaces then
                 -- No windows showing
-                nums[i] = hs.styledtext.new(i, self.noWindowsStyle)
+                table.insert(styledNums, hs.styledtext.new(i, self.noWindowsStyle))
             end
         end
 
         -- Text to display, as a hs.styledtext item
-        local disp = nums[1]
+        local disp = styledNums[1]
 
-        for i = 2, #nums do disp = disp .. self.separator .. nums[i] end
+        for i = 2, #styledNums do
+            disp = disp .. self.separator .. styledNums[i]
+        end
 
         self.bar:setTitle(disp)
     end, {"-m", "query", "--spaces"}):start()

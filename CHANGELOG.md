@@ -1,3 +1,10 @@
+## v0.3.0 - 30 Sep 2022
+
+### Changes
+
+- Update compatibility
+- Add option to show or hide empty, non-visible spaces
+
 ## v0.2.0 - 30 Sep 2022
 
 ### Changes
