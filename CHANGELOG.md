@@ -1,3 +1,10 @@
+## v0.2.0 - 30 Sep 2022
+
+### Changes
+
+- Fix processing of yabai query result to accomodate new data format
+  (see https://github.com/koekeishiya/yabai/issues/775)
+
 ## v0.1.2 - 13 Jan 2022
 
 ### Changes

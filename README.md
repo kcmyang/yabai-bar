@@ -7,8 +7,11 @@ A simple menu bar spaces indicator for the yabai window manager, written for Ham
 ## Installation
 
 Compatibility:
-- Tested on Big Sur (macOS 11).
-- Not tested on Monterery (macOS 12).
+- yabai
+  - Tested on v4.0.0^.
+  - Untested on v5.0.0^.
+- macOS
+  - Tested on Monterery (macOS 12).
 
 Prerequisites:
 - Install and configure [yabai](https://github.com/koekeishiya/yabai).

@@ -10,7 +10,9 @@ end
 
 local YabaiBar = {}
 
--- Constructor
+-- Constructor.
+-- Params:
+--   exec - the absolute path of the yabai executable to use
 function YabaiBar:new(exec)
     local yabaiBar = {
         bar = hs.menubar.new(),
@@ -43,9 +45,9 @@ function YabaiBar:new(exec)
     return setmetatable(yabaiBar, self)
 end
 
--- Update
+-- Updates the bar by querying yabai.
 function YabaiBar:update()
-    hs.task.new(self.exec, function(exitCode, stdOut, stdErr)
+    hs.task.new(self.exec, function(exitCode, stdOut, _)
         if exitCode ~= 0 then return end
 
         local spaces = hs.json.decode(stdOut)
@@ -56,10 +58,10 @@ function YabaiBar:update()
         local nums = {}
 
         for i = 1, #spaces do
-            if spaces[i].focused == 1 then
+            if spaces[i]["has-focus"] then
                 -- Focused
                 nums[i] = hs.styledtext.new(i, self.focusedStyle)
-            elseif spaces[i].visible == 1 then
+            elseif spaces[i]["is-visible"] then
                 -- Not focused, but visible
                 nums[i] = hs.styledtext.new(i, self.visibleStyle)
             elseif spaces[i]["first-window"] ~= 0 then
