@@ -1,3 +1,9 @@
+## v0.3.1 - 12 Jan 2024
+
+### Changes
+
+- Update compatibility
+
 ## v0.3.0 - 30 Sep 2022
 
 ### Changes

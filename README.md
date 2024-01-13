@@ -10,8 +10,10 @@ Compatibility:
 - yabai
   - Tested on v4.0.0^.
   - Tested on v5.0.0^.
+  - Tested on v6.0.0^.
 - macOS
   - Tested on Monterery (macOS 12).
+  - Tested on Sonoma (macOS 14).
 
 Prerequisites:
 - Install and configure [yabai](https://github.com/koekeishiya/yabai).
@@ -20,12 +22,12 @@ Prerequisites:
 Installation:
 - Clone this repo.
 - Create `~/.hammerspoon/init.lua` if you have not already.
-  
+
   ```sh
   touch ~/.hammerspoon/init.lua
   ```
 - Copy `yabai-bar/yabai-bar.lua` to `~/.hammerspoon/`.
-  
+
   ```sh
   cp yabai-bar/yabai-bar.lua ~/.hammerspoon/
   ```
