@@ -1,3 +1,12 @@
+## v0.4.0 - 15 May 2024
+
+### Changes
+
+- Update compatibility
+- Add parameter to specify where to install the `hs.ipc` CLI tool
+  (improves usability on Apple Silicon)
+- Add parameters to customize text colour in the bar
+
 ## v0.3.1 - 12 Jan 2024
 
 ### Changes

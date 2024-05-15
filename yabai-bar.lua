@@ -1,20 +1,84 @@
-if not hs.ipc.cliStatus() then
-    if not hs.ipc.cliInstall() then
-        hs.ipc.cliUninstall()
-        if not hs.ipc.cliInstall() then
-            hs.logger.new("yabai-bar"):e("Error installing `hs.ipc` :(")
-        end
+local function installCLI(ipcPath)
+    local status = hs.ipc.cliStatus(ipcPath)
+
+    if status == "broken" then
+        hs.logger.new("yabai-bar"):e("Given ipcPath has an existing broken installation, please debug")
+        return
     end
 
+    if status then
+        return
+    end
+
+    status = hs.ipc.cliInstall(ipcPath)
+
+    if status == "broken" then
+        hs.logger.new("yabai-bar"):e("Given ipcPath resulted in a broken installation, please debug")
+        return
+    end
+
+    if not status then
+        hs.logger.new("yabai-bar"):e("Failed to install hs.ipc CLI, please debug")
+    end
 end
 
 local YabaiBar = {}
 
 -- Constructor.
--- Params:
---   exec - the absolute path of the yabai executable to use
---   showEmptySpaces - whether to display indicators for empty, non-visible spaces (default: true)
-function YabaiBar:new(exec, showEmptySpaces)
+--
+--   YabaiBar:new{
+--      exec = string,
+--      [ipcPath = string,]
+--      [showEmptySpaces = boolean,]
+--      [focusedColor = table,]
+--      [visibleColor = table,]
+--      [hasWindowsColor = table,]
+--      [noWindowsColor = table,]
+--   }
+--
+-- This constructor should be called using a single table argument.
+-- All optional parameters should be passed by name.
+-- See https://www.hammerspoon.org/docs/hs.drawing.color.html for HammerSpoon color formats.
+--
+-- Parameters:
+--   exec - The absolute path of the yabai executable to use (usually, output of `which yabai`).
+--   ipcPath - The absolute path of the directory in which to install the `hs` CLI tool.
+--             Defaults to "/usr/local".  Should be a directory which the login user can write to.
+--             For Intel Macs, the default should work.  On Apple Silicon, the login user does not
+--             own /usr/local; if using yabai through homebrew, "/opt/homebrew" should work, but
+--             creating a directory in $HOME or using $HOME/.hammerspoon is also fine.
+--             The directories ipcPath/bin and ipcPath/share/man/man1 should already exist.
+--             See https://www.hammerspoon.org/docs/hs.ipc.html#cliInstall for details.
+--   showEmptySpaces - Whether to display indicators for empty, non-visible spaces.
+--                     Defaults to true.
+--   focusedColor - HammerSpoon color to use for the currently focused space.
+--                  Defaults to hs.drawing.color.hammerspoon.osx_green.
+--   visibleColor - HammerSpoon color to use for any visible but unfocused space.
+--                  Defaults to hs.drawing.color.hammerspoon.osx_yellow.
+--   hasWindowsColor - HammerSpoon color to use for any non-visible space with
+--                     windows.  Defaults to {hex = "#ddd"}.
+--   noWindowsColor - HammerSpoon color to use for any non-visible space without
+--                    windows.  Defaults to {hex = "#666"}.
+function YabaiBar:new(params)
+    setmetatable(params, { __index = {
+        ipcPath = "/usr/local",
+        showEmptySpaces = true,
+        focusedColor = hs.drawing.color.hammerspoon.osx_green,
+        visibleColor = hs.drawing.color.hammerspoon.osx_yellow,
+        hasWindowsColor = {hex = "#ddd"},
+        noWindowsColor = {hex = "#666"},
+    }})
+
+    local exec = params[1] or params.exec
+    local ipcPath = params.ipcPath
+    local showEmptySpaces = params.showEmptySpaces
+    local focusedColor = params.focusedColor
+    local visibleColor = params.visibleColor
+    local hasWindowsColor = params.hasWindowsColor
+    local noWindowsColor = params.noWindowsColor
+
+    installCLI(ipcPath)
+
     local yabaiBar = {
         bar = hs.menubar.new(),
         exec = exec,
@@ -23,19 +87,19 @@ function YabaiBar:new(exec, showEmptySpaces)
         showEmptySpaces = showEmptySpaces ~= false,
         focusedStyle = {
             font = hs.styledtext.defaultFonts.menuBar,
-            color = hs.drawing.color.hammerspoon.osx_green
+            color = focusedColor
         },
         visibleStyle = {
             font = hs.styledtext.defaultFonts.menuBar,
-            color = hs.drawing.color.hammerspoon.osx_yellow
+            color = visibleColor
         },
         hasWindowsStyle = {
             font = hs.styledtext.defaultFonts.menuBar,
-            color = {hex = "#ddd"}
+            color = hasWindowsColor
         },
         noWindowsStyle = {
             font = hs.styledtext.defaultFonts.menuBar,
-            color = {hex = "#666"}
+            color = noWindowsColor
         },
         separator = hs.styledtext.new("  ", {
             font = hs.styledtext.defaultFonts.menuBar

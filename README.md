@@ -11,9 +11,11 @@ Compatibility:
   - Tested on v4.0.0^.
   - Tested on v5.0.0^.
   - Tested on v6.0.0^.
+  - Tested on v7.0.0^.
 - macOS
   - Tested on Monterery (macOS 12).
   - Tested on Sonoma (macOS 14).
+  - Tested on Intel and Apple Silicon.
 
 Prerequisites:
 - Install and configure [yabai](https://github.com/koekeishiya/yabai).
@@ -33,16 +35,19 @@ Installation:
   ```
 - Configure your `init.lua` to create a new YabaiBar.
   After creation, you may choose to update the bar manually on HammerSpoon startup.
+  A simple example is given below.
 
   ```lua
   -- init.lua
-  YabaiBar = require("yabai-bar"):new("/your/yabai/executable")
+  YabaiBar = require("yabai-bar"):new{"/your/yabai/executable"}
   YabaiBar:update()
   ```
 
-  - Constructor signature: `YabaiBar:new(exec, showEmptySpaces)`:
-    - `exec` - the **absolute** path to your `yabai` executable (probably `/usr/local/bin/yabai`)
-    - `showEmptySpaces` - whether to show empty, non-visible spaces on the bar (defaults to true if not provided).
+  - For more information on the constructor signature, see the documentation in
+    [`yabai-bar.lua`](yabai-bar.lua).
+    **In particular, Apple Silicon users will likely want to provide a specific
+    directory in which to install the HammerSpoon CLI tool.**
+    Bar colours can also be customized here.
 - Configure your `yabairc` or `.yabairc` file to update the YabaiBar object appropriately.
   Because of how yabai's signals work, you will need multiple signals to catch all possible events.
 
@@ -62,16 +67,15 @@ Installation:
 
 ## Usage
 
-The currently focused space will appear in green.
+Under default colours, the currently focused space will appear in green.
 Other visible spaces (i.e. on other desktops) will appear in yellow.
 Spaces that are not visible but have visible windows will appear in light grey.
 Any other spaces will appear in dark grey.
 
 Unfortunately, not all programs play nicely with yabai and as such may not be "seen" by yabai.
-As a result, dark grey spaces may still have windows there (e.g. a space with only Steam visible
-will still appear dark grey).
+As a result, dark grey spaces may still have windows there.
 
-If you refresh yabai, you will have to revisit your spaces to make sure yabai acknowledges them and
+If you refresh yabai, you may have to revisit your spaces to make sure yabai acknowledges them and
 can pass the information along to YabaiBar.
 
 ## Screenshots
